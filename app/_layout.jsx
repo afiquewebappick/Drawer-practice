@@ -8,6 +8,10 @@ export default function RootLayout() {
         name="(drawer)"
         options={{ headerShown: false }}
       ></Stack.Screen>
+      <Stack.Screen
+        name="chat-modal"
+        options={{ headerShown: false, presentation: 'formSheet' }}
+      ></Stack.Screen>
     </Stack>
   );
 }

@@ -1,10 +1,19 @@
-import { View, Text, Button, Alert } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  Button,
+  Alert,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
+import React, { useCallback, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from 'expo-router';
 
 const OutsidePage = () => {
   // const [name, setName] = useState('');
   const [currentUser, setCurrentUser] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
 
   // Save data to AsyncStorage
   const saveName = async () => {
@@ -15,6 +24,7 @@ const OutsidePage = () => {
     };
     try {
       await AsyncStorage.setItem('user', JSON.stringify(user));
+      // Comment it to see refresh effect
       setCurrentUser(user);
       Alert.alert('Success', 'Name saved successfully');
     } catch (error) {
@@ -37,24 +47,33 @@ const OutsidePage = () => {
   //     console.log(error);
   //   }
   // };
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const value = JSON.parse(await AsyncStorage.getItem('user'));
-        if (value) {
-          setCurrentUser(value);
-          // setName(value);
-        } else {
-          setCurrentUser({});
-          // setName('');
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
 
-    fetchUser();
+  const fetchUser = useCallback(async () => {
+    try {
+      const value = JSON.parse(await AsyncStorage.getItem('user'));
+      if (value) {
+        setCurrentUser(value);
+        // setName(value);
+      } else {
+        setCurrentUser({});
+        // setName('');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchUser();
+    }, [fetchUser])
+  );
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchUser();
+    setRefreshing(false);
+  }, [fetchUser]);
 
   const clearName = async () => {
     try {
@@ -66,7 +85,18 @@ const OutsidePage = () => {
   };
 
   return (
-    <View style={{ padding: 20 }}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={{ padding: 20 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['#6200ee']}
+          tintColor="#6200ee"
+        />
+      }
+    >
       <Text style={{ fontSize: 20 }}>OutsidePage</Text>
 
       <Text style={{ marginVertical: 10 }}>User Name: {currentUser.name}</Text>
@@ -79,7 +109,7 @@ const OutsidePage = () => {
       {/* <Button title="Get Name" onPress={getName} />
       <View style={{ height: 10 }} /> */}
       <Button title="Clear Name" onPress={clearName} />
-    </View>
+    </ScrollView>
   );
 };
 
