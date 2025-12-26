@@ -1,8 +1,9 @@
-import { View, Text, ScrollView, Switch } from 'react-native';
+import { View, Text, ScrollView, Switch, Button } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'expo-router';
 import axios from 'axios';
 import Animated, { FadeIn, FadeInRight } from 'react-native-reanimated';
+import * as Linking from 'expo-linking'
 
 const Index = () => {
   const [todos, setTodos] = useState([]);
@@ -16,6 +17,11 @@ const Index = () => {
       console.log(error);
     }
   };
+
+  const openProfile = () => {
+    const url = 'drawerpractice://profile/25'
+    Linking.openURL(url)
+  }
 
   useEffect(() => {
     fetchData();
@@ -42,12 +48,13 @@ const Index = () => {
       </Animated.View>
 
       <View style={{ padding: 20 }}>
-        <Text style={{ fontSize: 20 }}>Home Screen</Text>
+      {/* <Text style={{ fontSize: 20 }}>Home Screen</Text> */}
 
-        <Link href="/profile/42">
-          <Text style={{ color: 'blue', marginTop: 10 }}>Go to Profile 42</Text>
-        </Link>
-      </View>
+      <Button
+        title="Open Profile 25 using Deep Link"
+        onPress={openProfile}
+      />
+    </View>
 
       <View className="mt-4">
         <Text className="text-xl">Total todos: {todos.length}</Text>
