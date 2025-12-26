@@ -2,7 +2,7 @@ import { View, Text, ScrollView, Switch } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'expo-router';
 import axios from 'axios';
-import Animated, { FadeIn, FadeInRight, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInRight } from 'react-native-reanimated';
 
 const Index = () => {
   const [todos, setTodos] = useState([]);
@@ -40,6 +40,14 @@ const Index = () => {
           onValueChange={() => setIsOn(!isOn)}
         />
       </Animated.View>
+
+      <View style={{ padding: 20 }}>
+        <Text style={{ fontSize: 20 }}>Home Screen</Text>
+
+        <Link href="/profile/42">
+          <Text style={{ color: 'blue', marginTop: 10 }}>Go to Profile 42</Text>
+        </Link>
+      </View>
 
       <View className="mt-4">
         <Text className="text-xl">Total todos: {todos.length}</Text>
