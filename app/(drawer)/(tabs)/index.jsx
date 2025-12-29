@@ -3,29 +3,63 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'expo-router';
 import axios from 'axios';
 import Animated, { FadeIn, FadeInRight } from 'react-native-reanimated';
-import * as Linking from 'expo-linking'
+import * as Linking from 'expo-linking';
+import * as Progress from 'react-native-progress';
 
 const Index = () => {
   const [todos, setTodos] = useState([]);
   const [isOn, setIsOn] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       const res = await axios.get('https://jsonplaceholder.typicode.com/todos');
       setTodos(res.data);
+      setTimeout(() => setLoading(false), 5000);
     } catch (error) {
       console.log(error);
     }
   };
 
   const openProfile = () => {
-    const url = 'drawerpractice://profile/25'
-    Linking.openURL(url)
-  }
+    const url = 'drawerpractice://profile/25';
+    Linking.openURL(url);
+  };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setProgress(1);
+      return;
+    }
+
+    setProgress(0);
+
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev === 1) {
+          clearInterval(interval);
+          return 1;
+        }
+        return prev + 0.2;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white">
+        <Progress.Bar progress={progress} width={200}/>
+      </View>
+    );
+  }
 
   return (
     <ScrollView className="bg-white px-2">
@@ -48,13 +82,12 @@ const Index = () => {
       </Animated.View>
 
       <View style={{ padding: 20 }}>
-      {/* <Text style={{ fontSize: 20 }}>Home Screen</Text> */}
+        {/* <Text style={{ fontSize: 20 }}>Home Screen</Text> */}
 
-      <Button
-        title="Open Profile 25 using Deep Link"
-        onPress={openProfile}
-      />
-    </View>
+        <Button title="Open Profile 25 using Deep Link" onPress={openProfile} />
+
+        <Link href="/google">Open Google Inside App</Link>
+      </View>
 
       <View className="mt-4">
         <Text className="text-xl">Total todos: {todos.length}</Text>
