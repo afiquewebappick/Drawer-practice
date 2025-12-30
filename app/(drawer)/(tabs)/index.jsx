@@ -17,7 +17,7 @@ const Index = () => {
       setLoading(true);
       const res = await axios.get('https://jsonplaceholder.typicode.com/todos');
       setTodos(res.data);
-      setTimeout(() => setLoading(false), 5000);
+      setTimeout(() => setLoading(false), 4000);
     } catch (error) {
       console.log(error);
     }
@@ -44,6 +44,7 @@ const Index = () => {
       setProgress((prev) => {
         if (prev === 1) {
           clearInterval(interval);
+          setLoading(false);
           return 1;
         }
         return prev + 0.2;
