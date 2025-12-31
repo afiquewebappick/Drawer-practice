@@ -6,15 +6,15 @@ import {
   Image,
   StyleSheet,
   Alert,
-  Button,
 } from 'react-native';
 import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const Profile = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState('');
 
   const pickImage = async () => {
     const permissionResult =
@@ -42,6 +42,27 @@ const Profile = () => {
     }
   };
 
+  const takeImage = async () => {
+    const permissionResult =
+      await ImagePicker.requestCameraPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert(
+        'Permission required',
+        'Permission to access the media library is required.'
+      );
+      return;
+    }
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+  };
+
   return (
     <View className="flex-1 items-center justify-center bg-gray-50">
       <Text className="mb-6 text-2xl font-bold">Profile</Text>
@@ -52,6 +73,10 @@ const Profile = () => {
       >
         <Text className="font-semibold">Pick an image from camera roll</Text>
         {image && <Image source={{ uri: image }} style={styles.image} />}
+      </TouchableOpacity>
+
+      <TouchableOpacity className="mb-4" onPress={takeImage}>
+        <AntDesign name="camera" size={34} color="black" />
       </TouchableOpacity>
 
       {/* Button to open modal */}
