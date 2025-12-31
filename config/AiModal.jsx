@@ -49,6 +49,7 @@ export const generateCourseTitles = async (topic) => {
     
     // Extract text from response
     const text = data.candidates[0].content.parts[0].text;
+    // console.log(data.candidates[0].content.parts[0])
     
     // Clean and parse JSON
     const cleanedText = text.trim().replace(/```json\n?/g, '').replace(/```\n?/g, '');
