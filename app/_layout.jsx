@@ -1,9 +1,12 @@
 import { Stack } from 'expo-router';
 import '../global.css';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
   return (
-    <Stack>
+    <SafeAreaProvider>
+      <SafeAreaView className='flex-1'>
+        <Stack>
       <Stack.Screen
         name="(drawer)"
         options={{ headerShown: false }}
@@ -13,5 +16,7 @@ export default function RootLayout() {
         options={{ headerShown: false, presentation: 'formSheet' }}
       ></Stack.Screen>
     </Stack>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }

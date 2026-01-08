@@ -97,7 +97,7 @@ const Index = () => {
       <View className="mt-4">
         <Text className="text-xl">Todo List:</Text>
 
-        {todos.slice(0, 10).map((todo, i) => (
+        {todos.slice(0, 50).map((todo, i) => (
           <View key={i} className="bg-gray-100 mt-2 p-2">
             <Text>{todo.title}</Text>
           </View>
