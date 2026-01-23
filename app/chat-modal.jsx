@@ -5,6 +5,7 @@ const chatModal = () => {
   return (
     <View>
       <Text>chat-modal</Text>
+      <Text>Chat</Text>
     </View>
   )
 }
